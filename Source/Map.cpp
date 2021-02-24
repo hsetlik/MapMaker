@@ -25,20 +25,22 @@ PngSet::PngSet(SDL_Renderer* rend)
     waterPng = SDL_CreateTextureFromSurface(rend, waterSurface);
     SDL_FreeSurface(waterSurface);
 }
-int rows = 10;
-int columns = 15;
+int rows = 15;
+int columns = 35;
 MapHolder::MapHolder(PngSet* set) : pngs(set)
 {
-    for(int x = 0; x < columns; ++x)
+    int i = 0;
+    for(int q = 0; q < columns; ++q)
     {
         std::vector<Tile> temp;
-        for(int y = 0; y < rows; ++y)
+        int x = q * (HEX_WIDTH * 3/4);
+        for(int r = 0; r < rows; ++r)
         {
-            int xPos = x * HEX_WIDTH;
-            if(y % 2 ==0)
-                xPos += (HEX_WIDTH / 2);
-            int yPos = y * HEX_WIDTH;
-            temp.push_back(Tile(grassland, xPos, yPos));
+            int y = r * HEX_HEIGHT;
+            if(q % 2 == 0)
+                y += HEX_HEIGHT / 2;
+            temp.push_back(Tile((TileType)(i % 4), x, y));
+            ++i;
         }
         tileGrid.push_back(temp);
     }
@@ -57,7 +59,7 @@ void MapHolder::renderTiles(SDL_Renderer *rend)
         auto vec = tileGrid[x];
         for(int y = 0; y < vec.size(); ++y)
         {
-            SDL_RenderCopy(rend, pngs->grassPng, NULL, &vec[y].bounds);
+            SDL_RenderCopy(rend, pngs->forType(vec[y].type), NULL, &vec[y].bounds);
         }
     }
 }

@@ -12,6 +12,8 @@
 #include <iostream>
 #include <vector>
 const int HEX_WIDTH = 80;
+const int HEX_RAD = 40;
+const int HEX_HEIGHT = sqrt(3.0) * HEX_RAD;
 
 enum TileType {
     grassland,
@@ -22,13 +24,14 @@ enum TileType {
 };
 
 //TODO: make this an abstract class and derive for different tile behaviors
+
 class Tile
 {
 public:
     Tile(TileType t, int x, int y) : xCenter(x), yCenter(y), type(t)
     {
-        bounds.x = xCenter - (HEX_WIDTH / 2);
-        bounds.y = yCenter - (HEX_WIDTH / 2);
+        bounds.x = xCenter;
+        bounds.y = yCenter;
         bounds.w = HEX_WIDTH;
         bounds.h = HEX_WIDTH;
     }
@@ -41,3 +44,4 @@ public:
 
 
 #endif /* HexTile_hpp */
+

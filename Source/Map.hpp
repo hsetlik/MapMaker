@@ -19,6 +19,22 @@ public:
      SDL_Texture* sandPng;
      SDL_Texture* dirtPng;
      SDL_Texture* waterPng;
+     SDL_Texture* forType(TileType t)
+    {
+        switch(t)
+        {
+            case grassland:
+                return grassPng;
+            case beach:
+                return sandPng;
+            case desert:
+                return sandPng;
+            case ocean:
+                return waterPng;
+            case dirt:
+                return dirtPng;
+        }
+    }
 };
 
 class MapHolder
