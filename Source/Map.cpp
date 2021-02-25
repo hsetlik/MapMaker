@@ -41,11 +41,17 @@ PngSet::PngSet(SDL_Renderer* rend)
 }
 int rows = 75;
 int columns = 87;
-MapHolder::MapHolder(PngSet* set, SDL_Renderer* r, SDL_Window* w) : pngs(set), zoomLevel(1.3f), rend(r), window(w)
+MapHolder::MapHolder(PngSet* set, SDL_Renderer* r, SDL_Window* w) : pngs(set), zoomLevel(1.3f), rend(r), window(w), handler(&tileGrid)
 {
     globalYOffset = -50;
     globalXOffset = -50;
     int i = 0;
+    int minX = 0;
+    int maxX = 0;
+    int minZ = 0;
+    int maxZ = 0;
+    int minY = 0;
+    int maxY = 0;
     for(int q = 0; q < columns; ++q)
     {
         std::vector<Tile> temp;
@@ -55,11 +61,27 @@ MapHolder::MapHolder(PngSet* set, SDL_Renderer* r, SDL_Window* w) : pngs(set), z
             int y = r * HEX_HEIGHT;
             if(q % 2 == 0)
                 y += HEX_HEIGHT / 2;
-            temp.push_back(Tile((TileType)(i % 5), x, y, r, q));
+            temp.push_back(Tile(ocean, x, y, r, q));
+            auto lastX = temp.back().xCube;
+            auto lastY = temp.back().yCube;
+            auto lastZ = temp.back().zCube;
+            
+            minX = (lastX < minX) ? lastX : minX;
+            maxX = (lastX > maxX) ? lastX : maxX;
+            minZ = (lastZ < minZ) ? lastZ : minZ;
+            maxZ = (lastZ > maxZ) ? lastZ : maxZ;
+            minY = (lastY < minY) ? lastY : minY;
+            maxY = (lastY > maxY) ? lastY : maxY;
             ++i;
         }
         tileGrid.push_back(temp);
     }
+    printf("Max X: %d\n", maxX);
+    printf("Min X: %d\n", minX);
+    printf("Max Z: %d\n", maxZ);
+    printf("Min Z: %d\n", minZ);
+    printf("Max Y: %d\n", maxY);
+    printf("Min Y: %d\n", minY);
     
     mapLimits.x = 0;
     mapLimits.y = 0;
@@ -138,6 +160,7 @@ void MapHolder::ensureContained(SDL_Rect *a, SDL_Rect *b)
 void MapHolder::clock()
 {
     pngs->clockWater();
+    handler.clock();
 }
 
 void MapHolder::renderTiles()

@@ -7,7 +7,7 @@
 #ifndef Map_hpp
 #define Map_hpp
 #pragma once
-#include "HexTile.hpp"
+#include "Geography.hpp"
 
 const int WATER_SPEED = 10;
 
@@ -103,6 +103,7 @@ public:
     SDL_Rect wRect;
     Sint32 globalXOffset;
     Sint32 globalYOffset;
+    LandHandler handler;
 };
 
 #endif

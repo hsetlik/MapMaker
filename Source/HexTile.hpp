@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <vector>
+#include <algorithm>
 const int HEX_WIDTH = 80;
 const int HEX_RAD = 40;
 const int HEX_HEIGHT = sqrt(3.0) * HEX_RAD;
