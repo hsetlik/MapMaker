@@ -35,9 +35,11 @@ public:
         bounds.w = HEX_WIDTH;
         bounds.h = HEX_WIDTH;
     }
+    void offset(Sint32 x, Sint32 y);
     ~Tile() {}
     int xCenter;
     int yCenter;
+    void scale(double _scale);
     TileType type;
     SDL_Rect bounds;
 };

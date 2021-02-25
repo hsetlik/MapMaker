@@ -12,7 +12,7 @@ int frameDelta;
 
 int main(int argc, const char * argv[])
 {
-    window = new AppWindow("SDL Window", 600, 600, wWidth, wHeight, false);
+    window = new AppWindow("SDL Window", 0, 0, wWidth, wHeight, false);
     while(window->running())
     {
         frameStart = SDL_GetTicks();

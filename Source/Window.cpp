@@ -31,25 +31,38 @@ AppWindow::AppWindow(const char* title, int xpos, int ypos, int width, int heigh
             isRunning = true;
             allPngs = new PngSet(renderer);
             printf("Images Loaded\n");
-            ownedMap = new MapHolder(allPngs);
+            ownedMap = new MapHolder(allPngs, renderer, window);
         }
 }
 
 void AppWindow::handleEvents()
 {
     SDL_Event event;
-        SDL_PollEvent(&event);
-        switch (event.type) {
-            case SDL_QUIT:
-                isRunning = false;
-                break;
-            case SDL_MOUSEBUTTONDOWN:
-                //do stuff when the mouse is clicked
-                break;
-            // check for more events with more case statements here
-            default:
-                break;
-        }
+        while(SDL_PollEvent(&event))
+        {
+            switch (event.type)
+            {
+                case SDL_QUIT:
+                    isRunning = false;
+                    break;
+                case SDL_MOUSEBUTTONDOWN:
+                    //do stuff when the mouse is clicked
+                    break;
+                // check for more events with more case statements here
+                case SDL_MOUSEWHEEL:
+                {
+                    ownedMap->setView(&event.wheel);
+                    break;
+                }
+                case SDL_MOUSEMOTION:
+                {
+                    ownedMap->handleMouseMove(&event.motion);
+                    break;
+                }
+                default:
+                    break;
+            }
+    }
 }
 
 void AppWindow::update()
@@ -61,8 +74,7 @@ void AppWindow::update()
 void AppWindow::render()
 {
     SDL_RenderClear(renderer);
-    //TODO: renderTiles doesn't do anything yet
-    ownedMap->renderTiles(renderer);
+    ownedMap->renderTiles();
     SDL_RenderPresent(renderer);
 }
 
