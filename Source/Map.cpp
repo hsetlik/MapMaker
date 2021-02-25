@@ -40,7 +40,7 @@ PngSet::PngSet(SDL_Renderer* rend)
     currentWater = water1Png;
 }
 int rows = 75;
-int columns = 88;
+int columns = 87;
 MapHolder::MapHolder(PngSet* set, SDL_Renderer* r, SDL_Window* w) : pngs(set), zoomLevel(1.3f), rend(r), window(w)
 {
     globalYOffset = -50;
@@ -55,7 +55,7 @@ MapHolder::MapHolder(PngSet* set, SDL_Renderer* r, SDL_Window* w) : pngs(set), z
             int y = r * HEX_HEIGHT;
             if(q % 2 == 0)
                 y += HEX_HEIGHT / 2;
-            temp.push_back(Tile((TileType)(i % 5), x, y));
+            temp.push_back(Tile((TileType)(i % 5), x, y, r, q));
             ++i;
         }
         tileGrid.push_back(temp);
@@ -94,8 +94,6 @@ void MapHolder::handleMouseMove(SDL_MouseMotionEvent *e)
     {
         globalXOffset += e->xrel;
         globalYOffset += e->yrel;
-        printf("X offset: %d\n", globalXOffset);
-        printf("Y offset: %d\n", globalYOffset);
         if(globalYOffset > -50)
             globalYOffset = -50;
         if(globalXOffset > -50)
@@ -106,22 +104,17 @@ void MapHolder::handleMouseMove(SDL_MouseMotionEvent *e)
             globalYOffset = -2438;
     }
 }
-
+double depth = 0.02f;
 void MapHolder::setView(SDL_MouseWheelEvent *e)
 {
-    auto scrollVal = e->y;
-    double depth = 0.02f;
-    if(zoomLevel + scrollVal * depth > 0.0)
-        zoomLevel += scrollVal * depth;
+    if(zoomLevel + e->y * (depth * zoomLevel) > 0.0)
+        zoomLevel += e->y * (depth * zoomLevel);
     if(zoomLevel < 0.44f)
         zoomLevel = 0.44f;
     wRect.h = 1000 / zoomLevel;
     wRect.w = wRect.h * 1.7;
     SDL_RenderSetScale(rend, zoomLevel, zoomLevel);
-    printf("Zoom: %f\n", zoomLevel);
 }
-
-
 void MapHolder::ensureContained(SDL_Rect *a, SDL_Rect *b)
 {
     if(!rectFullyContained(a, b))
